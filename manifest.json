@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "TwitchThemer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Choose what color you want your twitch to be!",
   "author": "SpiralDev",
   "content_scripts": [
@@ -18,14 +18,10 @@
     "*.css"
   ],
   "icons": {
-    "16": "assets/icons/icon16.png",
-    "48": "assets/icons/icon48.png",
-    "128": "assets/icons/icon128.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "twitchthemer@spiraldev"

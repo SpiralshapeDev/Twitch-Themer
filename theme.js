@@ -2,22 +2,31 @@
 // Licensed under the Apache License, Version 2.0
 // See LICENSE file for details.
 
-main_color = '#3a3b44'
-light_color = '#ffffff';
-mid_color = '#ffffff';
-dark_color = '#ffffff';
 
-const savedColor = getThemeCookie();
-if (savedColor) {
-    main_color = savedColor;
+theme_main_color = '#3a3b44'
+theme_light_color = '#ffffffff';
+theme_mid_color = '#ffffffff';
+theme_dark_color = '#ffffffff';
+text_color = '#ffffffff'
+
+const savedThemeColor = getCookie("twitch_theme_color");
+if (savedThemeColor) {
+    theme_main_color = savedThemeColor;
 }
 
-function setThemeCookie(color) {
-    document.cookie = `twitch_theme_color=${color}; path=/; domain=.twitch.tv; max-age=${60*60*24*365}`;
+const savedTextColor = getCookie("twitch_text_color");
+if (savedTextColor) {
+    text_color = savedTextColor;
 }
 
-function getThemeCookie() {
-    const match = document.cookie.match(/(^|;) ?twitch_theme_color=([^;]*)/);
+function setCookie(key,value) {
+    document.cookie = `${key}=${value}; path=/; domain=.twitch.tv; max-age=${60*60*24*365}`;
+}
+
+function getCookie(key) {
+    const match = document.cookie.match(
+        new RegExp(`(^|;)\\s*${key}=([^;]*)`)
+    );
     return match ? match[2] : null;
 }
 
@@ -60,16 +69,35 @@ function subtractHexColor(hex, r, g, b, a = 0) {
 }
 
 function RefreshTheme() {
-    light_color = subtractHexColor(main_color,8,8,8,0)
-    mid_color = subtractHexColor(main_color,25,25,25,0)
-    dark_color = subtractHexColor(main_color,35,35,35,0)
+    theme_light_color = subtractHexColor(theme_main_color,8,8,8,0)
+    theme_mid_color = subtractHexColor(theme_main_color,25,25,25,0)
+    theme_dark_color = subtractHexColor(theme_main_color,35,35,35,0)
 
-    Modify_Property('--color-background-float', main_color);
-    Modify_Property('--color-background-alt', light_color);
-    Modify_Property('--color-background-base', mid_color);
-    Modify_Property('--color-background-button-secondary-default', mid_color);
-    Modify_Property('--color-background-tag-default', mid_color);
-    Modify_Property('--color-background-body', dark_color);
+    Modify_Property('--color-background-float', theme_main_color);
+    Modify_Property('--color-background-pill', theme_main_color);
+    Modify_Property('--color-background-alt', theme_light_color);
+    Modify_Property('--color-background-base', theme_mid_color);
+    Modify_Property('--color-hinted-grey-2', theme_mid_color);
+    Modify_Property('--color-background-button-secondary-default', theme_light_color);
+    Modify_Property('--color-background-tag-default', theme_mid_color);
+    Modify_Property('--color-background-body', theme_dark_color);
+    
+    Modify_Property('--color-text-base', text_color);
+    Modify_Property('--color-text-alt-2', subtractHexColor(text_color,15,15,15,0));
+    Modify_Property('--color-text-button', text_color);
+    Modify_Property('--color-text-button-info', text_color);
+    Modify_Property('--color-text-button-success', text_color);
+    Modify_Property('--color-text-button-warn', text_color);
+    Modify_Property('--color-text-button-error', text_color);
+    Modify_Property('--color-text-button-destructive', text_color);
+    Modify_Property('--color-text-button-text-hover', text_color);
+    Modify_Property('--color-text-button-secondary', text_color);
+    Modify_Property('--color-text-input', text_color);
+    Modify_Property('--color-accent-label', text_color);
+
+    Modify_Property('--color-fill-button-icon', "#ffff");
+    Modify_Property('--color-fill-current', "#ffff");
+    
 
     Add_Custom_Style(`
         .tw-root--theme-dark .sunlight-expanded-nav-drop-down-menu-layout__scrollable-area,
@@ -82,17 +110,63 @@ function RefreshTheme() {
         .tw-root--theme-light .carousel-metadata,
         .bXENUW,
         .gGttfb,
-        .hpmfua
+        .hpmfua,
+        .highlight__collapsed,
+        .highlight,
+        .hQkcFk
         {
-            background: ` + mid_color + ` !important;
+            background: ` + theme_mid_color + ` !important;
         }
+
+        .fzEneC,
+        .gxRpGQ,
+        .tw-root--theme-dark .info_box_row,
+        .tw-root--theme-light .info_box_row
+        {
+            background: ` + theme_light_color + ` !important;
+        }
+
+        .tw-root--theme-dark .chat-wysiwyg-input__placeholder,
+        .tw-root--theme-light .chat-wysiwyg-input__placeholder,
+        .tw-root--theme-dark .navigation-link,
+        .tw-root--theme-light .navigation-link,
+        .ljigeK,
+        .gPNLhS
+        {
+            color : ` + text_color + ` !important;
+        }
+
+        .bXENUW,
+        .seventv-settings-menu-button,
+        .seventv-tw-button button[data-v-a098149a]:hover,
+        .ffz-i-pd-1::before,
+        .tw-root--hover .tw-button-icon:not(:disabled):hover,
+        .tw-root--hover .tw-button-icon:not(.tw-button-icon--disabled):hover,
+        .cCspFn,
+        .jgpfbi
+        {
+            color : #ffff !important;
+        }
+
+        .cWFBTs
+        {
+            color: ` + subtractHexColor(text_color,15,15,15,0) + ` !important;
+        }
+
+
         `
     )
 }
 
 RefreshTheme();
 
-const container = document.querySelector('.cRMumF');
+let container = document.querySelector('.cRMumF') || null;
+
+var is_homepage = true
+if (!container) {
+    container = document.querySelector('.sunlight-expanded-nav-drop-down-menu-layout__content')
+    is_homepage = false
+}
 
 if (container && container.firstChild) {
     const themer_button = document.createElement('themer_button');
@@ -101,7 +175,7 @@ if (container && container.firstChild) {
     themer_button.style.margin = "6px";
     themer_button.style.borderRadius = "6px";
     themer_button.style.border = "1px solid #444";
-    themer_button.style.background = mid_color;
+    themer_button.style.background = theme_mid_color;
     themer_button.style.cursor = "pointer";
 
     const themer_gui = document.createElement('div');
@@ -110,7 +184,7 @@ if (container && container.firstChild) {
     themer_gui.style.top = "50px";
     themer_gui.style.left = "50px";
     themer_gui.style.padding = "10px";
-    themer_gui.style.background = mid_color;
+    themer_gui.style.background = theme_mid_color;
     themer_gui.style.border = "1px solid #666";
     themer_gui.style.borderRadius = "8px";
     themer_gui.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
@@ -118,22 +192,48 @@ if (container && container.firstChild) {
     themer_gui.style.zIndex = "9999";
     document.body.appendChild(themer_gui);
 
-    const hex_picker = document.createElement('div');
-    hex_picker.innerHTML = `
-    <input type="color" id="hex_picker_themer" name="hex_picker_themer" value="${main_color}"/>
-    <label for="hex_picker_themer">Theme Color</label>`;
-    themer_gui.appendChild(hex_picker);
+    document.addEventListener('click', (event) => {
+        const isClickInsideGUI = themer_gui.contains(event.target);
+        const isClickOnButton = themer_button.contains(event.target);
 
-    const colorInput = hex_picker.querySelector('#hex_picker_themer');
-    colorInput.addEventListener('input', (event) => {
+        if (!isClickInsideGUI && !isClickOnButton) {
+            themer_gui.style.display = "none";
+        }
+    });
+
+    const theme_hex_picker = document.createElement('div');
+    theme_hex_picker.innerHTML = `
+    <input type="color" id="theme_hex_picker" name="theme_hex_picker" value="${theme_main_color}"/>
+    <label for="theme_hex_picker">Theme Color</label>`;
+    themer_gui.appendChild(theme_hex_picker);
+
+    const themeColorInput = theme_hex_picker.querySelector('#theme_hex_picker');
+    themeColorInput.addEventListener('input', (event) => {
         const selectedColor = event.target.value;
         console.log("Selected color:", selectedColor);
 
-        setThemeCookie(selectedColor)
+        setCookie("twitch_theme_color",selectedColor)
 
-        main_color = selectedColor
+        theme_main_color = selectedColor
         themer_gui.style.background = selectedColor
         themer_button.style .background = selectedColor
+        RefreshTheme()
+    });
+
+    const text_hex_picker = document.createElement('div');
+    text_hex_picker.innerHTML = `<br>
+    <input type="color" id="text_hex_picker" name="text_hex_picker" value="${text_color}"/>
+    <label for="text_hex_picker">Text Color</label>`;
+    themer_gui.appendChild(text_hex_picker);
+
+    const textColorInput = text_hex_picker.querySelector('#text_hex_picker');
+    textColorInput.addEventListener('input', (event) => {
+        const selectedColor = event.target.value;
+        console.log("Selected color:", selectedColor);
+
+        setCookie("twitch_text_color",selectedColor)
+
+        text_color = selectedColor
         RefreshTheme()
     });
 
@@ -145,6 +245,11 @@ if (container && container.firstChild) {
         themer_gui.style.display = themer_gui.style.display === "none" ? "block" : "none";
     });
 
-    container.children[0].after(themer_button);
+    if (is_homepage) {
+        container.children[0].after(themer_button);
+    } else {
+        container.after(themer_button);
+    }
+
     document.body.appendChild(themer_gui);
 }
