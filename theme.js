@@ -38,19 +38,22 @@ function Modify_Property(id,color) {
     document.documentElement.style.setProperty(id,color);
     console.log("Replaced " + id + " with " + color)
 }
+
 function Add_Custom_Style(style) {
     const elements = document.querySelectorAll('#twitch_themer_style');
     elements.forEach(el => el.remove());
     
+    // Create new style element
     const styleEl = document.createElement("style");
     styleEl.id = "twitch_themer_style";
-    styleEl.innerHTML = style;
+    styleEl.textContent = style;
     document.head.appendChild(styleEl);
 
     console.log("Applied style " + style);
 }
 
-function subtractHexColor(hex, r, g, b, a = 0) {
+
+function ModifyHexColor(hex, r, g, b, a = 0) {
     hex = hex.replace('#', '');
 
     let red = parseInt(hex.substring(0, 2), 16);
@@ -58,10 +61,10 @@ function subtractHexColor(hex, r, g, b, a = 0) {
     let blue = parseInt(hex.substring(4, 6), 16);
     let alpha = hex.length === 8 ? parseInt(hex.substring(6, 8), 16) : 255;
 
-    red = Math.max(0, red - r);
-    green = Math.max(0, green - g);
-    blue = Math.max(0, blue - b);
-    alpha = Math.max(0, alpha - a);
+    red = Math.max(0, red + r);
+    green = Math.max(0, green + g);
+    blue = Math.max(0, blue + b);
+    alpha = Math.max(0, alpha + a);
 
     const toHex = n => n.toString(16).padStart(2, '0');
 
@@ -69,9 +72,9 @@ function subtractHexColor(hex, r, g, b, a = 0) {
 }
 
 function RefreshTheme() {
-    theme_light_color = subtractHexColor(theme_main_color,8,8,8,0)
-    theme_mid_color = subtractHexColor(theme_main_color,25,25,25,0)
-    theme_dark_color = subtractHexColor(theme_main_color,35,35,35,0)
+    theme_light_color = ModifyHexColor(theme_main_color,-8,-8,-8,0)
+    theme_mid_color = ModifyHexColor(theme_main_color,-25,-25,-25,0)
+    theme_dark_color = ModifyHexColor(theme_main_color,-35,-35,-35,0)
 
     Modify_Property('--color-background-float', theme_main_color);
     Modify_Property('--color-background-pill', theme_main_color);
@@ -83,7 +86,7 @@ function RefreshTheme() {
     Modify_Property('--color-background-body', theme_dark_color);
     
     Modify_Property('--color-text-base', text_color);
-    Modify_Property('--color-text-alt-2', subtractHexColor(text_color,15,15,15,0));
+    Modify_Property('--color-text-alt-2', ModifyHexColor(text_color,-15,-15,-15,0));
     Modify_Property('--color-text-button', text_color);
     Modify_Property('--color-text-button-info', text_color);
     Modify_Property('--color-text-button-success', text_color);
@@ -100,6 +103,15 @@ function RefreshTheme() {
     
 
     Add_Custom_Style(`
+        .hex-picker-container
+        {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            color : ` + text_color + `
+        }
+
         .tw-root--theme-dark .sunlight-expanded-nav-drop-down-menu-layout__scrollable-area,
         .tw-root--theme-dark .stream-manager--page-view .mosaic-window-body,
         .tw-root--theme-dark .ach-sb,
@@ -108,7 +120,6 @@ function RefreshTheme() {
         .tw-root--theme-light .stream-manager--page-view .mosaic-window-body,
         .tw-root--theme-light .ach-sb,
         .tw-root--theme-light .carousel-metadata,
-        .bXENUW,
         .gGttfb,
         .hpmfua,
         .highlight__collapsed,
@@ -121,7 +132,8 @@ function RefreshTheme() {
         .fzEneC,
         .gxRpGQ,
         .tw-root--theme-dark .info_box_row,
-        .tw-root--theme-light .info_box_row
+        .tw-root--theme-light .info_box_row,
+        .bXENUW
         {
             background: ` + theme_light_color + ` !important;
         }
@@ -136,7 +148,11 @@ function RefreshTheme() {
             color : ` + text_color + ` !important;
         }
 
-        .bXENUW,
+        .bXENUW
+        {
+            color : ` + ModifyHexColor(text_color,10,10,10,0) + ` !important;
+        }
+
         .seventv-settings-menu-button,
         .seventv-tw-button button[data-v-a098149a]:hover,
         .ffz-i-pd-1::before,
@@ -150,7 +166,7 @@ function RefreshTheme() {
 
         .cWFBTs
         {
-            color: ` + subtractHexColor(text_color,15,15,15,0) + ` !important;
+            color: ` + ModifyHexColor(text_color,-15,-15,-15,0) + ` !important;
         }
 
 
@@ -169,6 +185,12 @@ if (!container) {
 }
 
 if (container && container.firstChild) {
+    let colorInput;
+    let label;
+
+
+    // Button/GUI
+
     const themer_button = document.createElement('themer_button');
     themer_button.textContent = "Themer";
     themer_button.style.padding = "6px 12px";
@@ -192,6 +214,14 @@ if (container && container.firstChild) {
     themer_gui.style.zIndex = "9999";
     document.body.appendChild(themer_gui);
 
+    themer_button.addEventListener('click', () => {
+        const rect = themer_button.getBoundingClientRect();
+        themer_gui.style.position = "fixed";
+        themer_gui.style.top = rect.bottom + 5 + "px";
+        themer_gui.style.left = rect.left + "px";
+        themer_gui.style.display = themer_gui.style.display === "none" ? "block" : "none";
+    });
+
     document.addEventListener('click', (event) => {
         const isClickInsideGUI = themer_gui.contains(event.target);
         const isClickOnButton = themer_button.contains(event.target);
@@ -201,10 +231,24 @@ if (container && container.firstChild) {
         }
     });
 
+
+    // BG Hex Picker
+
     const theme_hex_picker = document.createElement('div');
-    theme_hex_picker.innerHTML = `
-    <input type="color" id="theme_hex_picker" name="theme_hex_picker" value="${theme_main_color}"/>
-    <label for="theme_hex_picker">Theme Color</label>`;
+    colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.id = 'theme_hex_picker';
+    colorInput.name = 'theme_hex_picker';
+    colorInput.value = theme_main_color;
+
+    label = document.createElement('label');
+    label.htmlFor = 'theme_hex_picker';
+    label.textContent = 'Theme Color';
+
+    theme_hex_picker.appendChild(colorInput);
+    theme_hex_picker.appendChild(label);
+    theme_hex_picker.classList.add('hex-picker-container');
+
     themer_gui.appendChild(theme_hex_picker);
 
     const themeColorInput = theme_hex_picker.querySelector('#theme_hex_picker');
@@ -220,10 +264,24 @@ if (container && container.firstChild) {
         RefreshTheme()
     });
 
+
+    // Text Hex Picker
+
     const text_hex_picker = document.createElement('div');
-    text_hex_picker.innerHTML = `<br>
-    <input type="color" id="text_hex_picker" name="text_hex_picker" value="${text_color}"/>
-    <label for="text_hex_picker">Text Color</label>`;
+    colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.id = 'text_hex_picker';
+    colorInput.name = 'text_hex_picker';
+    colorInput.value = text_color;
+
+    label = document.createElement('label');
+    label.htmlFor = 'text_hex_picker';
+    label.textContent = 'Text Color';
+
+    text_hex_picker.appendChild(colorInput);
+    text_hex_picker.appendChild(label);
+    text_hex_picker.classList.add('hex-picker-container');
+
     themer_gui.appendChild(text_hex_picker);
 
     const textColorInput = text_hex_picker.querySelector('#text_hex_picker');
@@ -237,13 +295,8 @@ if (container && container.firstChild) {
         RefreshTheme()
     });
 
-    themer_button.addEventListener('click', () => {
-        const rect = themer_button.getBoundingClientRect();
-        themer_gui.style.position = "fixed";
-        themer_gui.style.top = rect.bottom + 5 + "px";
-        themer_gui.style.left = rect.left + "px";
-        themer_gui.style.display = themer_gui.style.display === "none" ? "block" : "none";
-    });
+
+    // Setting location for button
 
     if (is_homepage) {
         container.children[0].after(themer_button);

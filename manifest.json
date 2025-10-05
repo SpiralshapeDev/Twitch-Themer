@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "TwitchThemer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Choose what color you want your twitch to be!",
   "author": "SpiralDev",
   "content_scripts": [
@@ -13,9 +13,6 @@
         "theme.js"
       ]
     }
-  ],
-  "web_accessible_resources": [
-    "*.css"
   ],
   "icons": {
     "16": "icons/icon16.png",
