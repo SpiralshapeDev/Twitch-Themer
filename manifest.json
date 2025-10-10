@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "TwitchThemer",
-  "version": "1.1.1",
+  "version": "1.2",
   "description": "Choose what color you want your twitch to be!",
   "author": "SpiralDev",
   "content_scripts": [
