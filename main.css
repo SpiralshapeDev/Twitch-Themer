@@ -1,0 +1,200 @@
+/*
+  Copyright 2025 SpiralDev
+  Licensed under the Apache License, Version 2.0
+  See LICENSE file for details.
+*/
+
+:root {
+    --gradient-ambient-cuddle-twitch-purple: linear-gradient(#fa1ed2 0%, var(--color-twitch-purple-9) 100%);
+
+    --color-background-pill: var(--color-background-float);
+    --color-background-button-secondary-default: var(--color-background-alt);
+    --color-hinted-grey-2: var(--color-background-base);
+    --color-background-tag-default: var(--color-background-base);
+
+    --color-text-base: var(--twitch_themer_text_color);
+    --color-text-button: var(--twitch_themer_text_color);
+    --color-text-button-info: var(--twitch_themer_text_color);
+    --color-text-button-success: var(--twitch_themer_text_color);
+    --color-text-button-warn: var(--twitch_themer_text_color);
+    --color-text-button-error: var(--twitch_themer_text_color);
+    --color-text-button-destructive: var(--twitch_themer_text_color);
+    --color-text-button-text-hover: var(--twitch_themer_text_color);
+    --color-text-button-secondary: var(--twitch_themer_text_color);
+    --color-text-input: var(--twitch_themer_text_color);
+    --color-accent-label: var(--twitch_themer_text_color);
+
+    --color-fill-button-icon: #ffff;
+    --color-fill-current: #ffff;
+    --color-border-input: #ffff;
+}
+
+/* --- Themer Elements --- */
+
+.hex-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    color : var(--twitch_themer_text_color);
+}
+
+#theme_hex_picker,
+#text_hex_picker,
+#twitch_hex_picker {
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+#theme_hex_picker::-webkit-color-swatch-wrapper,
+#text_hex_picker::-webkit-color-swatch-wrapper,
+#twitch_hex_picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#theme_hex_picker::-webkit-color-swatch,
+#text_hex_picker::-webkit-color-swatch,
+#twitch_hex_picker::-webkit-color-swatch {
+    border: none;
+}
+
+#theme_hex_picker::-moz-color-swatch,
+#text_hex_picker::-moz-color-swatch,
+#twitch_hex_picker::-moz-color-swatch {
+    border: none;
+}
+
+#theme_hex_picker {
+    background: var(--twitch_themer_main_color);
+    border-width: 2px;
+}
+#text_hex_picker {
+    background: var(--twitch_themer_text_color);
+    border-width: 2px;
+}
+#twitch_hex_picker {
+    background: var(--twitch_themer_twitch_color);
+    border-width: 2px;
+}
+
+#themer_button {
+    padding: 6px 12px;
+    margin: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--color-opac-gd-2);
+    background: var(--color-background-base);
+    cursor: pointer;
+}
+
+#themer_gui {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    padding: 10px;
+    background: var(--color-background-base);
+    border: 1px solid var(--color-opac-gd-2);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    color: #ffff;
+    z-index: 9999;
+}
+
+/* --- Twitch Elements --- */
+
+body {
+    color-scheme: dark !important;
+    scrollbar-color: hsla(0, 0%, 100%, .4) transparent !important;
+}
+
+.bybbL[type="search"],
+.bybbL[type="date"],
+.bybbL[type="datetime-local"],
+.bybbL[type="time"],
+.bybbL[type="week"],
+.bybbL[type="month"] {
+    color-scheme: dark !important;
+}
+
+.gGttfb {
+    background-color: var(--color-background-alt) !important;
+}
+
+.tw-root--theme-dark .sunlight-expanded-nav-drop-down-menu-layout__scrollable-area,
+.tw-root--theme-dark .stream-manager--page-view .mosaic-window-body,
+.tw-root--theme-dark .ach-sb,
+.tw-root--theme-dark .carousel-metadata,
+.tw-root--theme-light .sunlight-expanded-nav-drop-down-menu-layout__scrollable-area,
+.tw-root--theme-light .stream-manager--page-view .mosaic-window-body,
+.tw-root--theme-light .ach-sb,
+.tw-root--theme-light .carousel-metadata,
+.hpmfua,
+.highlight__collapsed,
+.highlight,
+.hQkcFk,
+.bwACrq {
+    background: var(--color-background-base) !important;
+}
+
+.fzEneC,
+.gxRpGQ,
+.tw-root--theme-dark .info_box_row,
+.tw-root--theme-light .info_box_row,
+.bXENUW {
+    background: var(--color-background-alt) !important;
+}
+
+.tw-root--theme-dark .chat-wysiwyg-input__placeholder,
+.tw-root--theme-light .chat-wysiwyg-input__placeholder,
+.tw-root--theme-dark .navigation-link,
+.tw-root--theme-light .navigation-link,
+.ljigeK,
+.gPNLhS,
+.lbYztg,
+.bYjuhc,
+.fKHFsE,
+.isnsjj {
+    color : var(--color-text-base) !important;
+}
+
+.tw-root--hover .tw-button-icon:not(:disabled):hover,
+.tw-root--hover .tw-button-icon:not(.tw-button-icon--disabled):hover,
+.cCspFn,
+.jgpfbi,
+.jiTMMY,
+#channel-points-reward-center-body > div > div > div.Layout-sc-1xcs6mc-0.cVSGvQ > div > button > div > div > div > p,
+.ljigeK,
+.gGttfb {
+    color: var(--color-fill-button-icon) !important;
+}
+
+.cWFBTs {
+    color: var(--color-text-alt-2);
+}
+
+.quick-action-layout--purple {
+    background: var(--color-twitch-purple-9) !important;
+}
+
+.kccyMt {
+    fill: #ffff !important;
+}
+
+.tw-root--theme-dark .creator-home-focus-position {
+    background: linear-gradient(to bottom, var(--ch-bg-focus-color), var(--color-background-alt)); !important;
+}
+
+/* --- 7TV Elements --- */
+
+.seventv-settings-menu-button,
+.seventv-tw-button button[data-v-a098149a]:hover,
+.ffz-i-pd-1::before,
+.seventv-tw-button[data-v-32c0d32c] {
+    color : #ffff !important;
+}
+
+/* --- FFZ Elements --- */
+
+.ffz-i-pd-1::before {
+    color : #ffff !important;
+}

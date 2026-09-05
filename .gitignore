@@ -1,2 +1,7 @@
 *.zip
 *.xpi
+.idea/
+
+# Don't package npm (for easier building in dev)
+package*.json
+npm_modules/
